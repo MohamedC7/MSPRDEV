@@ -2,7 +2,7 @@ import cv2
 import logging
 import sys
 
-logging.basicConfig(filename='example.log', level=logging.INFO)
+logging.basicConfig(filename='../example.log', level=logging.INFO)
 
 def equal(image1, image2):
     original = cv2.imread(image1)
@@ -28,5 +28,5 @@ def equal(image1, image2):
 
 if __name__ == '__main__':
         print("script python is running")
-        print(equal("Ekans.png","Aipom.png"))
+        print(equal("model/2D/Ekans.png","model/2D/Ekans_Colored.png"))
     
