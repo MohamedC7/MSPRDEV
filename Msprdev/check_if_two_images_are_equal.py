@@ -26,4 +26,3 @@ def equal(image1, image2):
 
 
 
-print(equal("Aipom.png","Ekans.png"))
