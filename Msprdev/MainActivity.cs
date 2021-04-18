@@ -15,6 +15,14 @@ using AndroidX.DrawerLayout.Widget;
 using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Navigation;
 using Google.Android.Material.Snackbar;
+
+
+using System.Text;
+using IronPython.Hosting;
+using Microsoft.Scripting.Hosting;
+
+
+
 //using IronPython.Hosting;
 //using Microsoft.Scripting.Hosting;
 
@@ -77,11 +85,15 @@ namespace Msprdev
 
         private void CaptureButton_Click(object sender, System.EventArgs e)
         {
-            TakePhoto();
+           
+            
+           TakePhoto();
+            
         }
 
         async void TakePhoto()
         {
+           
             await Plugin.Media.CrossMedia.Current.Initialize();
 
             var file = await Plugin.Media.CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
@@ -102,12 +114,113 @@ namespace Msprdev
             byte[] imageArray = System.IO.File.ReadAllBytes(file.Path);
             Bitmap bitmap = BitmapFactory.DecodeByteArray(imageArray, 0, imageArray.Length);
             thisImageView.SetImageBitmap(bitmap);
+            Option2_IronPython();
 
-            // TODO : save the image on cache and compare it to the model2D
-            // TODO : run the python script
-            //PatchParameter("nothing",4090);
+
 
         }
+
+
+
+
+        static void Option2_IronPython()
+        {
+            var engine = Python.CreateEngine();
+            try
+            {
+                engine.ExecuteFile("D:\\check_if_two_images_are_equal.py");
+            }
+            catch(Exception exp)
+            {
+                Console.WriteLine(exp);
+            }
+            Console.ReadLine();
+            /*
+              //instance of python engine
+              var engine = Python.CreateEngine();
+              //reading code from file
+
+              var source = engine.CreateScriptSourceFromFile(System.IO.Path.Combine("D:\\MSPRDEV\\Msprdev\\", "check_if_two_images_are_equal.py"));
+              var scope = engine.CreateScope();
+              //executing script in scope
+              source.Execute(scope);
+              var classImageProcess = scope.GetVariable("ImageProcess");
+              //initializing class
+              var ImageProcessInstance = engine.Operations.CreateInstance(classImageProcess);
+              Console.WriteLine("From Iron Python");
+              Console.WriteLine("5 + 10 = {0}", ImageProcessInstance.equal("Aipom.png", "Ekans.png"));
+
+              */
+
+
+
+            /*
+            var engine = Python.CreateEngine(); // Extract Python language engine from their grasp
+            var scope = engine.CreateScope(); // Introduce Python namespace (scope)
+
+
+            var argv = new List<string>();
+            argv.Add("");
+            argv.Add("Aipom.png");
+            argv.Add("Ekans");
+
+            engine.GetSysModule().SetVariable("argv", argv);// Add some sample parameters. Notice that there is no need in specifically setting the object type, interpreter will do that part for us in the script properly with high probability
+
+           
+            ScriptSource source = engine.CreateScriptSourceFromFile("D:\\MSPRDEV\\Msprdev\\check_if_two_images_are_equals.py"); // Load the script
+            object result = source.Execute(scope);
+            */
+            /*
+
+
+
+
+
+
+              // 1) Create engine
+              var engine = Python.CreateEngine();
+
+              // 2) Provide script and arguments
+              var script = @"check_if_two_images_are_equals.py";                   
+              var source = engine.CreateScriptSourceFromFile(script);
+
+              var argv = new List<string>();
+              argv.Add("");
+              argv.Add("Aipom.png");
+              argv.Add("Ekans");
+
+              engine.GetSysModule().SetVariable("argv", argv);
+
+              // 3) Output redirect
+              var eIO = engine.Runtime.IO;
+
+              var errors = new MemoryStream();
+              eIO.SetErrorOutput(errors, Encoding.Default);
+
+              var results = new MemoryStream();
+              eIO.SetOutput(results, Encoding.Default);
+
+              // 4) Execute script
+              ScriptScope scope = engine.CreateScope();
+              string expr = "equal('Aipom.png','Ekans.png')";
+              var result = engine.Execute(expr, scope);
+              //var scope = engine.CreateScope();
+             // source.Execute(scope);
+
+
+              // 5) Display output
+              string str(byte[] x) => Encoding.Default.GetString(x);
+
+              Console.WriteLine("ERRORS:");
+              Console.WriteLine(str(errors.ToArray()));
+              Console.WriteLine();
+              Console.WriteLine("Results:");
+              Console.WriteLine(str(results.ToArray()));
+              */
+
+        }
+
+
         async void UploadPhoto()
         {
             await Plugin.Media.CrossMedia.Current.Initialize();
@@ -211,7 +324,7 @@ namespace Msprdev
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        
+
         /*
         public void ImageProcessing()
         {
@@ -245,7 +358,13 @@ namespace Msprdev
             return parameter;
         }
         */
-        public string run_cmd(string cmd, string args)
+
+
+
+        
+
+
+        public string Runcmd(string cmd, string args)
         {
             ProcessStartInfo start = new ProcessStartInfo();
             start.FileName = "C:\\Users\\mchaieb\\AppData\\Local\\Programs\\Python\\Python39\\python.exe";
@@ -265,5 +384,6 @@ namespace Msprdev
             }
         }
     }
+   
 }
 
